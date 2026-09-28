@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Titan fork: strings for fork-only features. Kept out of strings.xml to avoid upstream merge conflicts. -->
+<resources>
+    <string name="status_bar_hidden_title">Hide status bar</string>
+    <string name="status_bar_hidden_description">With the hardware keyboard, show nothing above the keys. SYM, emoji and clipboard pages still open when invoked.</string>
+</resources>
