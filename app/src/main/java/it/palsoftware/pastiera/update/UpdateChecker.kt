@@ -132,7 +132,7 @@ private fun checkRelease(
     val request = Request.Builder()
         .url(
             if (feed == ReleaseFeed.SUCCESSOR) successorReleasesApiUrl()
-            else "https://api.github.com/repos/palsoftware/pastiera/releases?per_page=20"
+            else successorReleasesApiUrl() // Titan fork: own update endpoint
         )
         .header("Accept", "application/vnd.github+json")
         .build()

@@ -1,0 +1,48 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: titan
+          fetch-depth: 0
+      - name: Merge palsoftware/pastiera main
+        id: merge
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/palsoftware/pastiera.git
+          git fetch upstream main
+          # main is a pure mirror of upstream
+          git push origin upstream/main:refs/heads/main --force
+          if git merge-base --is-ancestor upstream/main HEAD; then
+            echo "Already up to date."; exit 0
+          fi
+          if git merge --no-edit upstream/main; then
+            git push origin HEAD:titan
+          else
+            git merge --abort
+            echo "conflict=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Report conflict
+        if: steps.merge.outputs.conflict == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Upstream merge conflict"
+          if [ -z "$(gh issue list --state open --search "$title in:title" --json number -q '.[].number')" ]; then
+            gh issue create --title "$title" --body "Merging palsoftware/pastiera main into titan conflicts. Resolve locally: git fetch upstream && git checkout titan && git merge upstream/main"
+          fi

@@ -381,3 +381,22 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }
+
+// ---- Titan fork overlay -------------------------------------------------------------
+// All fork branding lives in this one appended block + src/titan/, so upstream merges
+// don't conflict. Upstream forking policy: own name, application ID and update endpoints.
+android {
+    defaultConfig {
+        applicationId = "io.github.umutayb.titan"
+        // Both update feeds read this repo (see UpdateChecker).
+        buildConfigField("String", "SUCCESSOR_GITHUB_REPOSITORY", "\"Umutayb/titan\"")
+    }
+    productFlavors.named("stable") {
+        manifestPlaceholders += mapOf("appLabel" to "Titan", "imeLabel" to "Titan")
+    }
+    productFlavors.named("nightly") {
+        manifestPlaceholders += mapOf("appLabel" to "Titan Nightly", "imeLabel" to "Titan Nightly")
+    }
+    sourceSets.named("stable") { res.srcDir("src/titan/res") }
+    sourceSets.named("nightly") { res.srcDir("src/titan/res") }
+}

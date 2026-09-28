@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Titan fork branding; overrides main/ via the stable+nightly flavor source sets. -->
+<resources>
+    <string name="app_name">Titan</string>
+    <string name="input_method_name">Titan</string>
+</resources>
